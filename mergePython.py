@@ -34,7 +34,7 @@ code = """
 import numpy as np
 
 # Função para ordenar o array com merge_sort
-    def merge_sort(arr):
+def merge_sort(arr):
     # Caso base: se o array tem 1 ou 0 elementos, já está ordenado
     if len(arr) <= 1:
         return arr
