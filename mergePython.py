@@ -33,18 +33,46 @@ def obter_informacoes():
 code = """
 import numpy as np
 
-def bubble_sort(lista): 
-    # Outer loop for traverse the entire list 
-    for i in range(0, len(lista)-1): 
-        for j in range(len(lista)-1): 
-            if(lista[j] > lista[j+1]): 
-                temp = lista[j] 
-                lista[j] = lista[j+1] 
-                lista[j+1] = temp 
-    return lista 
+# Função para ordenar o array com merge_sort
+    def merge_sort(arr):
+    # Caso base: se o array tem 1 ou 0 elementos, já está ordenado
+    if len(arr) <= 1:
+        return arr
+    
+    # Dividir o array ao meio
+    meio = len(arr) // 2
+    esquerda = arr[:meio]  # Primeira metade
+    direita = arr[meio:]   # Segunda metade
+    
+    # Ordenar recursivamente as duas metades
+    esquerda = merge_sort(esquerda)
+    direita = merge_sort(direita)
+    
+    # Unir as duas metades ordenadas
+    return merge(esquerda, direita)
+
+def merge(esquerda, direita):
+    resultado = []  # Lista para armazenar o array ordenado
+    i = j = 0  # Índices para percorrer as duas listas
+
+    # Enquanto houver elementos em ambas as listas, compare e adicione o menor
+    while i < len(esquerda) and j < len(direita):
+        if esquerda[i] < direita[j]:
+            resultado.append(esquerda[i])
+            i += 1
+        else:
+            resultado.append(direita[j])
+            j += 1
+
+    # Adicionar os elementos restantes de qualquer lista
+    resultado.extend(esquerda[i:])
+    resultado.extend(direita[j:])
+    
+    return resultado
+
 
 # Função para ler o arquivo e ordenar os números
-def ler_e_ordenar_arquivo(nome_arquivo):
+def ler_arquivo(nome_arquivo):
     try:
         # Lê o arquivo e converte cada linha em um número
         with open(nome_arquivo, 'r') as arquivo:
@@ -61,14 +89,14 @@ def ler_e_ordenar_arquivo(nome_arquivo):
 
 # Função para escrever o array ordenado em um txt
 def escreve_resposta(array):
-    with open("Resultados/respostasPythonBubble.txt", "w") as arquivo:
+    with open("Resultados/respostasPythonMerge.txt", "w") as arquivo:
         for i in array:
             # Escreve cada número em uma nova linha
             arquivo.write(str(i))
 
 # Lê o arquivo, ordena os números e escreve o resultado no arquivo
-array = ler_e_ordenar_arquivo("arquivoteste.txt")
-arrayOrdem = bubble_sort(array)
+array = ler_arquivo("arquivoteste.txt")
+arrayOrdem = merge_sort(array)
 escreve_resposta(arrayOrdem)
 """
 
@@ -84,4 +112,3 @@ tempos = timer.repeat(repeat=n_exec, number=1) # O "number" serve para delimitar
 for i, tempo in enumerate(tempos, 1):
     print(f"Execução {i}: {tempo: .5f} segundos")
 obter_informacoes()
-
