@@ -15,9 +15,6 @@ def obter_informacoes():
     processador = platform.processor()
     maquina = platform.machine()
 
-    # RAM utilizada
-    memoria = psutil.virtual_memory()
-    ram_utilizada = memoria.used / 1024  # Convertendo de bytes para KB
 
     # Exibir informações
     print("=== Informações do Sistema ===")
@@ -27,7 +24,6 @@ def obter_informacoes():
     print(f"Arquitetura: {arquitetura[0]}")  # 32-bit ou 64-bit
     print(f"Processador: {processador}")
     print(f"Tipo de Máquina: {maquina}")
-    print(f"RAM Utilizada: {ram_utilizada:.2f} KB")
 
 # Código que vai ser medido.
 code = """
@@ -111,5 +107,10 @@ tempos = timer.repeat(repeat=n_exec, number=1) # O "number" serve para delimitar
 
 # Exibir os tempos individuais 
 for i, tempo in enumerate(tempos, 1):
+    # Ram utilizada
+    memoria = psutil.virtual_memory()
+    ram_utilizada = memoria.used / 1024  # Convertendo de bytes para KB
     print(f"Execução {i}: {tempo*1000: .5f} milisegundos")
+    print(f"RAM Utilizada: {ram_utilizada:.2f} KB")
+
 obter_informacoes()
