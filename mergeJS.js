@@ -80,24 +80,12 @@ const memoriaUsoAntes = process.memoryUsage();
 console.log("Uso de memória do processo antes da execução:");
 console.log(
   "RSS (Resident Set Size):",
-  (memoriaUsoAntes.rss / 1024 ** 2).toFixed(2),
-  "MB"
+  (memoriaUsoAntes.rss / 1024).toFixed(2),
+  "KB"
 );
-console.log(
-  "Heap Total:",
-  (memoriaUsoAntes.heapTotal / 1024 ** 2).toFixed(2),
-  "MB"
-);
-console.log(
-  "Heap Used:",
-  (memoriaUsoAntes.heapUsed / 1024 ** 2).toFixed(2),
-  "MB"
-);
-console.log(
-  "External:",
-  (memoriaUsoAntes.external / 1024 ** 2).toFixed(2),
-  "MB"
-);
+console.log("Heap Total:", (memoriaUsoAntes.heapTotal / 1024).toFixed(2), "KB");
+console.log("Heap Used:", (memoriaUsoAntes.heapUsed / 1024).toFixed(2), "KB");
+console.log("External:", (memoriaUsoAntes.external / 1024).toFixed(2), "KB");
 
 // Função exemplo para medir o tempo de execução
 let arr = lerArquivoParaArray("arquivoteste.txt");
@@ -109,24 +97,16 @@ const memoriaUsoDepois = process.memoryUsage();
 console.log("Uso de memória do processo após a execução:");
 console.log(
   "RSS (Resident Set Size):",
-  (memoriaUsoDepois.rss / 1024 ** 2).toFixed(2),
-  "MB"
+  (memoriaUsoDepois.rss / 1024).toFixed(2),
+  "KB"
 );
 console.log(
   "Heap Total:",
-  (memoriaUsoDepois.heapTotal / 1024 ** 2).toFixed(2),
-  "MB"
+  (memoriaUsoDepois.heapTotal / 1024).toFixed(2),
+  "KB"
 );
-console.log(
-  "Heap Used:",
-  (memoriaUsoDepois.heapUsed / 1024 ** 2).toFixed(2),
-  "MB"
-);
-console.log(
-  "External:",
-  (memoriaUsoDepois.external / 1024 ** 2).toFixed(2),
-  "MB"
-);
+console.log("Heap Used:", (memoriaUsoDepois.heapUsed / 1024).toFixed(2), "KB");
+console.log("External:", (memoriaUsoDepois.external / 1024).toFixed(2), "KB");
 
 // Imprimir as informações sobre o sistema
 console.timeEnd("Tempo de execução");

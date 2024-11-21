@@ -64,7 +64,7 @@ def escreve_resposta(array):
     with open("Resultados/respostasPythonBubble.txt", "w") as arquivo:
         for i in array:
             # Escreve cada número em uma nova linha
-            arquivo.write(str(i))
+            arquivo.write(str(int(i)) + " ")
 
 # Lê o arquivo, ordena os números e escreve o resultado no arquivo
 array = ler_e_ordenar_arquivo("arquivoteste.txt")
@@ -74,6 +74,7 @@ escreve_resposta(arrayOrdem)
 
 # Define o timer por meio do timeit
 timer = tm.Timer(stmt=code)
+timer.timeit(number=1)  # Execução inicial para "aquecimento"
 
 # Definir o número de execuções e medir o tempo de cada uma, colocando cada tempo em um array.
 n_exec = 10
@@ -82,6 +83,6 @@ tempos = timer.repeat(repeat=n_exec, number=1) # O "number" serve para delimitar
 
 # Exibir os tempos individuais 
 for i, tempo in enumerate(tempos, 1):
-    print(f"Execução {i}: {tempo: .5f} segundos")
+    print(f"Execução {i}: {(tempo): .5f} milisegundos")
 obter_informacoes()
 
