@@ -1,74 +1,80 @@
-import timeit as tm
 import sys
 import platform
 import psutil
+import time
 
 
+# Função para ordenar a lista (Bubble Sort)
+def sort(array):
+    for final in range(len(array), 0, -1):  # Vai da última posição do array até a posição 0
+        exchanging = False  # Variável para verificar se o array já está ordenado
 
-def obter_informacoes():
-    versao_python = sys.version
-    so = platform.system()
-    versao_so = platform.version()
-    arquitetura = platform.architecture()
-    processador = platform.processor()
-    maquina = platform.machine()
+        for current in range(0, final - 1):  # Vai da posição 0 até a posição final menos 1
+            if array[current] > array[current + 1]:  # Verifica se o elemento atual é maior que o próximo
+                array[current], array[current + 1] = array[current + 1], array[current]  # Troca os elementos
+                exchanging = True
 
-    print("=== Informações do Sistema ===")
-    print(f"Versão do Python: {versao_python}")
-    print(f"Sistema Operacional: {so}")
-    print(f"Versão do SO: {versao_so}")
-    print(f"Arquitetura: {arquitetura[0]}")
-    print(f"Processador: {processador}")
-    print(f"Tipo de Máquina: {maquina}")
+        if not exchanging:  # Se não houve troca, o array já está ordenado
+            break
 
 
-# Código que será medido
-code = """
-import numpy as np
-import os
+# Função para ler números de um arquivo .txt
+def read_numbers_from_file(filename):
+    with open(filename, 'r') as file:
+        numbers = [int(line.strip()) for line in file]  # Lê cada linha, converte para int e armazena na lista
+    return numbers
 
-def bubble_sort(lista):
-    for i in range(len(lista)-1):
-        for j in range(len(lista)-1):
-            if lista[j] > lista[j+1]:
-                lista[j], lista[j+1] = lista[j+1], lista[j]
-    return lista
 
-def ler_e_ordenar_arquivo(nome_arquivo):
-    try:
-        with open(nome_arquivo, 'r') as arquivo:
-            numeros = [float(linha.strip()) for linha in arquivo]
-        return numeros  # Retorna uma lista para o bubble_sort
-    except FileNotFoundError:
-        print(f"Erro: O arquivo '{nome_arquivo}' não foi encontrado.")
-        return []
-    except ValueError:
-        print("Erro: O arquivo contém dados inválidos.")
-        return []
+# Função para escrever os números ordenados em um novo arquivo
+def write_numbers_to_file(filename, numbers):
+    with open(filename, 'w') as file:
+        for number in numbers:
+            file.write(f"{number}\n")
 
-def escreve_resposta(array):
-    os.makedirs("Resultados", exist_ok=True)  # Cria o diretório se não existir
-    with open("Resultados/respostasPythonBubble.txt", "w") as arquivo:
-        for num in array:
-            arquivo.write(f"{int(num)} ")
 
-array = ler_e_ordenar_arquivo("arquivoteste.txt")
-array_ordenado = bubble_sort(array)
-escreve_resposta(array_ordenado)
-"""
+# Função para pegar informações do sistema
+def get_system_info():
+    # Informações do sistema
+    python_version = sys.version
+    system_info = platform.uname()
+    cpu_info = psutil.cpu_percent(interval=1)  # Uso de CPU
+    memory_info = psutil.virtual_memory()
+    
+    # Exibindo as informações
+    print(f"Linguagem Python: {python_version}")
+    print(f"Sistema: {system_info.system} {system_info.release} ({system_info.machine})")
+    print(f"Processador: {system_info.processor}")
+    print(f"Uso de CPU: {cpu_info}%")
+    print(f"Memória Total: {memory_info.total / (1024 ** 2):.2f} MB")
+    print(f"Memória Livre: {memory_info.available / (1024 ** 2):.2f} MB")
+    print(f"Memória Usada: {memory_info.used / (1024 ** 2):.2f} MB")
 
-# RAM utilizada antes da execução (em KB)
-memoria = psutil.virtual_memory()
-ram_utilizada = memoria.used / 1024  # Convertendo para KB
+def rodarcode():
+    # Caminho do arquivo
+    input_filename = 'arquivoteste.txt'
+    output_filename = 'respostasPythonBubble.txt'
 
-# Mede o tempo com timeit
-timer = tm.Timer(stmt=code)
-n_exec = 10 
-tempos = timer.repeat(repeat=n_exec, number=1)
+    # Lê os números do arquivo
+    numbers = read_numbers_from_file(input_filename)
 
-# Exibir os tempos
-for i, tempo in enumerate(tempos, 1):
-    print(f"Execução {i}: {tempo * 1000:.5f} ms")
-    print(f"RAM Utilizada: {ram_utilizada:.2f} KB")
+    # Medir o tempo de execução do algoritmo de ordenação
+    start_time = time.time()  # Inicia o contador de tempo
+    sort(numbers)             # Chama a função de ordenação
+    end_time = time.time()    # Finaliza o contador de tempo
+    execution_time = (end_time - start_time) * 1000  # Tempo em milissegundos
 
-obter_informacoes()
+    # Escrever os números ordenados em um novo arquivo
+    write_numbers_to_file(output_filename, numbers)
+
+    # Exibe as informações do sistema
+    get_system_info()
+
+    # Exibe o tempo de execução e a memória RAM utilizada
+    process = psutil.Process()
+    memory_info = process.memory_info()
+    print(f"\nTempo de Execução: {execution_time:.2f} ms")
+    print(f"Memória RAM Utilizada: {memory_info.rss / 1024:.2f} KB")
+
+for i in range(10):
+    print(f"Execução {i + 1}:")
+    rodarcode()
